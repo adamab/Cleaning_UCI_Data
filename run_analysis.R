@@ -15,7 +15,7 @@ feature <- read.table(file = "features.txt"
 test.data <- read.table(file = "test/Y_test.txt"
                         ,colClasses = "numeric") %>% #bring in activity IDs
         cbind(select(read.table(file = "test/subject_test.txt"
-                         ,colClasses = "factor"), Subject = V1)) %>% #add subject IDs
+                         ,colClasses = "numeric"), Subject = V1)) %>% #add subject IDs
         cbind(read.table(file = "test/X_test.txt"
                                 ,colClasses = "numeric"
                                 ,col.names = feature$Feature)) %>% #add variables
@@ -26,7 +26,7 @@ test.data <- read.table(file = "test/Y_test.txt"
 train.data <- read.table(file = "train/Y_train.txt"
                          ,colClasses = "numeric") %>% #bring in activity IDs
         cbind(select(read.table(file = "train/subject_train.txt"
-                         ,colClasses = "factor"), Subject = V1)) %>% #add subject IDs
+                         ,colClasses = "numeric"), Subject = V1)) %>% #add subject IDs
         cbind(read.table(file = "train/X_train.txt"
                                          ,colClasses = "numeric"
                                          ,col.names = feature$Feature)) %>% #add variables
@@ -43,7 +43,8 @@ all.data <- all.data[,c("Activity","Subject")] %>% #select the activity and subj
 
 ## Subset for tidy data set
 tidy.data <- melt(all.data,id = c("Subject", "Activity")) %>% #convert to key value pair dataset
-        dcast(Subject + Activity ~ variable, mean) #collapse variables above using mean
+        dcast(Subject + Activity ~ variable, mean) %>% #collapse variables above using mean
+        arrange(as.numeric(Subject),Activity)
 
 ## Create the txt file for upload
 write.table(tidy.data, "tidy_data.txt", row.names = FALSE)
