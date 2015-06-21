@@ -44,7 +44,7 @@ all.data <- all.data[,c("Activity","Subject")] %>% #select the activity and subj
 ## Subset for tidy data set
 tidy.data <- melt(all.data,id = c("Subject", "Activity")) %>% #convert to key value pair dataset
         dcast(Subject + Activity ~ variable, mean) %>% #collapse variables above using mean
-        arrange(as.numeric(Subject),Activity)
+        arrange(Subject,Activity) #arrange by subject and activity
 
 ## Create the txt file for upload
 write.table(tidy.data, "tidy_data.txt", row.names = FALSE)
